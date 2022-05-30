@@ -6,8 +6,8 @@ export(bool) var boss_room: bool = false
 const SPAWN_EXPLOSION_SCENE: PackedScene = preload("res://Characters/Enemies/SpawnExplosion.tscn")
 
 const ENEMY_SCENES: Dictionary = {
-	"FLYING_CREATURE": preload("res://Characters/Enemies/Flying Creature/FlyingCreature.tscn"),
-	"GOBLIN": preload("res://Characters/Enemies/Goblin/Goblin.tscn"), "SLIME_BOSS": preload("res://Characters/Enemies/Bosses/SlimeBoss.tscn")
+	"FLYING_CREATURE": preload("res://Characters/Enemies/Flying Creature/FlyingCreature.tscn"), "SKELETON_MELEE": preload("res://Characters/Enemies/Flying Creature/Skeleton_Melee.tscn"),
+	"GOBLIN": preload("res://Characters/Enemies/Goblin/Goblin.tscn"), "SLIME_BOSS": preload("res://Characters/Enemies/Bosses/SlimeBoss.tscn"), "GOBLIN_BOSS" : preload("res://Characters/Enemies/Bosses/GoblinBoss.tscn")
 }
 
 var num_enemies: int
@@ -44,13 +44,23 @@ func _spawn_enemies() -> void:
 	for enemy_position in enemy_positions_container.get_children():
 		var enemy: KinematicBody2D
 		if boss_room:
-			enemy = ENEMY_SCENES.SLIME_BOSS.instance()
-			num_enemies = 15
+			if SavedData.num_floor == 1:
+				enemy = ENEMY_SCENES.GOBLIN_BOSS.instance()
+				num_enemies = 1
+			elif SavedData.num_floor == 3:
+				enemy = ENEMY_SCENES.SLIME_BOSS.instance()
+				num_enemies = 15
 		else:
-			if randi() % 2 == 0:
-				enemy = ENEMY_SCENES.FLYING_CREATURE.instance()
-			else:
-				enemy = ENEMY_SCENES.GOBLIN.instance()
+			if SavedData.num_floor < 3:
+				if randi() % 2 == 0:
+					enemy = ENEMY_SCENES.FLYING_CREATURE.instance()
+				else:
+					enemy = ENEMY_SCENES.GOBLIN.instance()
+			elif SavedData.num_floor > 3:
+				if randi() % 3 == 0:
+					enemy = ENEMY_SCENES.GOBLIN.instance()
+				else:
+					enemy = ENEMY_SCENES.SKELETON_MELEE.instance()
 		enemy.position = enemy_position.position
 		call_deferred("add_child", enemy)
 		

@@ -5,6 +5,8 @@ const INTERMEDIATE_ROOMS: Array = [preload("res://Rooms/Room0.tscn"), preload("r
 const SPECIAL_ROOMS: Array = [preload("res://Rooms/SpecialRoom0.tscn"), preload("res://Rooms/SpecialRoom1.tscn")]
 const END_ROOMS: Array = [preload("res://Rooms/EndRoom0.tscn")]
 const SLIME_BOSS_SCENE: PackedScene = preload("res://Rooms/SlimeBossRoom.tscn")
+const GOBLIN_BOSS_SCENE: PackedScene = preload("res://Rooms/GoblinBossRoom.tscn")
+const LEVEL_2_ROOMS: Array = [preload("res://Rooms/Level_2_Room0.tscn"), preload("res://Rooms/Level_2_Room1.tscn"), preload("res://Rooms/Level_2_Room3.tscn")]
 
 const TILE_SIZE: int = 16
 const FLOOR_TILE_INDEX: int = 14
@@ -37,16 +39,19 @@ func _spawn_rooms() -> void:
 			if i == num_levels - 1:
 				room = END_ROOMS[randi() % END_ROOMS.size()].instance()
 			else:
-				if SavedData.num_floor == 3:
-					room = SLIME_BOSS_SCENE.instance()
-				elif SavedData.num_floor == 6:
+				if SavedData.num_floor == 1:
+					room = GOBLIN_BOSS_SCENE.instance()
+				elif SavedData.num_floor == 3:
 					room = SLIME_BOSS_SCENE.instance()
 				else:
 					if (randi() % 3 == 0 and not special_room_spawned) or (i == num_levels - 2 and not special_room_spawned):
 						room = SPECIAL_ROOMS[randi() % SPECIAL_ROOMS.size()].instance()
 						special_room_spawned = true
 					else:
-						room = INTERMEDIATE_ROOMS[randi() % INTERMEDIATE_ROOMS.size()].instance()
+						if SavedData.num_floor < 3:
+							room = INTERMEDIATE_ROOMS[randi() % INTERMEDIATE_ROOMS.size()].instance()
+						else:
+							room = LEVEL_2_ROOMS[randi() % LEVEL_2_ROOMS.size()].instance()
 				
 			var previous_room_tilemap: TileMap = previous_room.get_node("TileMap")
 			var previous_room_door: StaticBody2D = previous_room.get_node("Doors/Door")
