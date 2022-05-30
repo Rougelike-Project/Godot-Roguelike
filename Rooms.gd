@@ -39,7 +39,7 @@ func _spawn_rooms() -> void:
 			if i == num_levels - 1:
 				room = END_ROOMS[randi() % END_ROOMS.size()].instance()
 			else:
-				if SavedData.num_floor == 1:
+				if SavedData.num_floor == 6:
 					room = GOBLIN_BOSS_SCENE.instance()
 				elif SavedData.num_floor == 3:
 					room = SLIME_BOSS_SCENE.instance()

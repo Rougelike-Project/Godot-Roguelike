@@ -44,7 +44,7 @@ func _spawn_enemies() -> void:
 	for enemy_position in enemy_positions_container.get_children():
 		var enemy: KinematicBody2D
 		if boss_room:
-			if SavedData.num_floor == 1:
+			if SavedData.num_floor == 6:
 				enemy = ENEMY_SCENES.GOBLIN_BOSS.instance()
 				num_enemies = 1
 			elif SavedData.num_floor == 3:
